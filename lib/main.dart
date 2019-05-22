@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:youtube_api/youtube_api.dart';
+import 'dart:convert' show json;
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() => runApp(MyApp());
 
@@ -48,9 +50,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with ListItemGestures{
-  static const String API_KEY = "";
+  String _api_Key = "";
 
-  YoutubeAPI _youtubeAPI = new YoutubeAPI(API_KEY);
+  YoutubeAPI _youtubeAPI;
   String channelId = "UCmTqXrmTBfkRIbZiJ5xkhfg";
   List<YT_API> _ytAPIResult = [];
   List<VideoItem> _videoItems = [];
@@ -110,7 +112,20 @@ class _MyHomePageState extends State<MyHomePage> with ListItemGestures{
   void initState() {
     // TODO: implement initState
     super.initState();
-    callYTAPI();
+    initYTAPI();
+  }
+
+  initYTAPI() {
+    var apiKey = _youtubeAPI?.key ?? "";
+    if(apiKey.isEmpty){
+      Future<Secret> secret = SecretLoader(secretPath: "assets/config.json").load();
+      secret.then((secret) {
+        print("API " + secret.apiKey);
+        _api_Key = secret.apiKey;
+        _youtubeAPI = new YoutubeAPI(_api_Key);
+        callYTAPI();
+      });
+    }
   }
 
   callYTAPI() async {
@@ -160,4 +175,26 @@ class VideoItem extends StatelessWidget {
 
 mixin ListItemGestures on State<MyHomePage>{
   void onTap(YT_API ytAPIItem);
+}
+
+class Secret {
+  final String apiKey;
+  Secret({this.apiKey = ""});
+
+  factory Secret.fromJson(Map<String, dynamic> jsonMap) {
+    return new Secret(apiKey: jsonMap["api_key"]);
+  }
+}
+
+class SecretLoader {
+  final String secretPath;
+
+  SecretLoader({this.secretPath});
+  Future<Secret> load() {
+    return rootBundle.loadStructuredData<Secret>(this.secretPath,
+            (jsonStr) async {
+          final secret = Secret.fromJson(json.decode(jsonStr));
+          return secret;
+        });
+  }
 }
