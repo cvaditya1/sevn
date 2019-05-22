@@ -48,7 +48,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with ListItemGestures{
-  static const String API_KEY = "AIzaSyDPRX1UYxmWNCdyinqjX3YrCiaUYobx4UY";
+  static const String API_KEY = "";
 
   YoutubeAPI _youtubeAPI = new YoutubeAPI(API_KEY);
   String channelId = "UCmTqXrmTBfkRIbZiJ5xkhfg";
