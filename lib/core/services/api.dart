@@ -8,7 +8,7 @@ class Api {
 
   YoutubeAPI _youtubeAPI;
   String channelId = "UCmTqXrmTBfkRIbZiJ5xkhfg";
-  List<YT_API> _ytAPIResult = [];
+  List _ytAPIResult = [];
   List<VideoItem> _videoItems = [];
 
   Future<List<VideoItem>> getVideoItemList() async {
