@@ -58,7 +58,8 @@ class _HomeViewState extends State<HomeView> {
     _scrollController.addListener((){
       if(_scrollController.offset >= _scrollController.position.maxScrollExtent && !_scrollController.position.outOfRange){
         setState(() {
-          print("Reached Bottom");
+          //print("Reached Bottom");
+          model.getNextPage();
         });
       }
 /*      if(_scrollController.offset <= _scrollController.position.minScrollExtent && !_scrollController.position.outOfRange){
