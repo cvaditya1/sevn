@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+/*import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:youtube_api/youtube_api.dart';
 import 'dart:convert' show json;
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show rootBundle;*/
 
-void main() => runApp(MyApp());
+import 'package:sevn/locator.dart';
+import 'package:sevn/ui/router.dart';
+
+void main() {
+  setupLocator();
+  runApp(MyApp());
+}
 
 const String title = "Sevn";
 
@@ -26,12 +32,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: title),
+      onGenerateRoute: Router.generateRoute,
+      //home: MyHomePage(title: title),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+/*class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -148,9 +155,9 @@ class _MyHomePageState extends State<MyHomePage> with ListItemGestures{
       print("Tap" + ytAPIItem.url);
     });
   }
-}
+}*/
 
-class VideoItem extends StatelessWidget {
+/*class VideoItem extends StatelessWidget {
   final YT_API ytAPIItem;
   final ListItemGestures listItemGestures;
 
@@ -167,13 +174,13 @@ class VideoItem extends StatelessWidget {
   }
 
   VideoItem({this.ytAPIItem, this.listItemGestures});
-}
+}*/
 
 /*void _onVideoItemTapped(YT_API ytAPIItem){
   print("Tap" + ytAPIItem.url);
 }*/
 
-mixin ListItemGestures on State<MyHomePage>{
+/*mixin ListItemGestures on State<MyHomePage>{
   void onTap(YT_API ytAPIItem);
 }
 
@@ -197,4 +204,4 @@ class SecretLoader {
           return secret;
         });
   }
-}
+}*/
