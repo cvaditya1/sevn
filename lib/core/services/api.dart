@@ -26,6 +26,15 @@ class Api {
     }
     return _videoItems;
   }
+
+  Future<List<VideoItem>> getMoreVideoItems() async {
+    _ytAPIResult = await _youtubeAPI.nextPage();
+    for (YT_API result in _ytAPIResult) {
+      VideoItem item = new VideoItem(result);
+      _videoItems.add(item);
+    }
+    return _videoItems;
+  }
 }
 
 class Secret {

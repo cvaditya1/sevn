@@ -15,4 +15,10 @@ class HomeModel extends BaseModel {
     videoItems = await _api.getVideoItemList();
     setState(ViewState.IDLE);
   }
+
+  Future getNextPage() async {
+    setState(ViewState.BUSY);
+    videoItems = await _api.getMoreVideoItems();
+    setState(ViewState.IDLE);
+  }
 }
