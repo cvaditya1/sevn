@@ -67,10 +67,13 @@ class _HomeViewState extends State<HomeView> {
             ),
       );
 
+  var currentAlignment = Alignment.bottomCenter;
+  var currentVideoHeight = 200.0;
+
   Widget getYoutubePlayer() => Align(
-        alignment: Alignment.bottomCenter,
+        alignment: currentAlignment,
         child: Container(
-          constraints: BoxConstraints.expand(height: 200.0),
+          constraints: BoxConstraints.expand(height: currentVideoHeight),
           child: Stack(
             children: <Widget>[
               YoutubePlayer(
