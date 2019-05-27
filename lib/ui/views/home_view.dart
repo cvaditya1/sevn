@@ -11,7 +11,7 @@ import 'package:sevn/core/enums/view_state.dart';
 
 import 'video_list_item_view.dart';
 
-class HomeView extends StatefulWidget{
+class HomeView extends StatefulWidget {
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -41,41 +41,55 @@ class _HomeViewState extends State<HomeView> {
                             ],
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            constraints: BoxConstraints.expand(height: 200.0),
-                            child: Stack(
-                              children: <Widget>[
-                                YoutubePlayer(
-                                  context: context,
-                                  videoId: "9vzd289Eedk",
-                                  autoPlay: false,
-                                ),
-                                new Container(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                      icon: Icon(Icons.close), onPressed: null),
-                                ),
-                              ],
-                            ),
-                          ),
+                        Container(
+                          child: ((_videoIdSelected?.isNotEmpty ?? false)
+                              ? getYoutubePlayer()
+                              : null),
                         ),
                       ],
                     ),
             ));
   }
 
+  String _videoIdSelected;
+
   Widget getVideoList(List<VideoItem> items) => ListView.builder(
         padding: EdgeInsets.all(8.0),
         itemCount: items.length,
-        itemBuilder: (context, index) => getVideoView(items[index]),
+        itemBuilder: (context, index) => VideoListItem(
+              videoItem: items[index],
+              onTap: () {
+                setState(() {
+                  print("Tapped");
+                  _videoIdSelected = items[index].ytAPIItem.id;
+                });
+              },
+            ),
       );
 
-  Widget getVideoView(VideoItem item) => VideoListItem(
-        videoItem: item,
-        onTap: (videoItemTapped) {
-          print("URL: " + videoItemTapped.ytAPIItem.url);
-        },
+  Widget getYoutubePlayer() => Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          constraints: BoxConstraints.expand(height: 200.0),
+          child: Stack(
+            children: <Widget>[
+              YoutubePlayer(
+                context: context,
+                videoId: _videoIdSelected,
+                autoPlay: false,
+              ),
+              new Container(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      setState(() {
+                        _videoIdSelected = "";
+                      });
+                    }),
+              ),
+            ],
+          ),
+        ),
       );
 }
