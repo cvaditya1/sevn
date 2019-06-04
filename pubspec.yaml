@@ -27,6 +27,8 @@ dependencies:
   get_it: ^1.0.3
   youtube_player_flutter: ^1.1.1+1
   youtube_api: ^0.7.2
+  cached_network_image: ^0.8.0
+  transparent_image: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:youtube_api/youtube_api.dart';
 import 'dart:convert' show json;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:sevn/core/models/video_item.dart';
+import 'package:sevn/core/models/channel_item.dart';
 
 class Api {
   String _apiKey = "";
@@ -10,6 +11,7 @@ class Api {
   String channelId = "UCmTqXrmTBfkRIbZiJ5xkhfg";
   List _ytAPIResult = [];
   List<VideoItem> _videoItems = [];
+  ChannelItem _channelItem;
 
   Future<List<VideoItem>> getVideoItemList() async {
     var apiKey = _youtubeAPI?.key ?? "";
@@ -19,10 +21,16 @@ class Api {
       _youtubeAPI = new YoutubeAPI(_apiKey, type: "channel");
 
     }
+
+    _ytAPIResult = await _youtubeAPI.channelDetail(channelId);
+    for (YT_API result in _ytAPIResult) {
+      _channelItem = _getChannelDetails(result);
+    }
+
     _ytAPIResult = await _youtubeAPI.channel(channelId);
     for (YT_API result in _ytAPIResult) {
-      VideoItem item = new VideoItem(result);
-      _videoItems.add(item);
+      VideoItem item = _getVideoItem(result) ?? null;
+      if(item != null)_videoItems.add(item);
     }
     return _videoItems;
   }
@@ -30,10 +38,32 @@ class Api {
   Future<List<VideoItem>> getMoreVideoItems() async {
     _ytAPIResult = await _youtubeAPI.nextPage();
     for (YT_API result in _ytAPIResult) {
-      VideoItem item = new VideoItem(result);
-      _videoItems.add(item);
+      VideoItem item = _getVideoItem(result) ?? null;
+      if(item != null)_videoItems.add(item);
     }
     return _videoItems;
+  }
+
+  VideoItem _getVideoItem(YT_API result){
+    var kind = result?.kind ?? "";
+    if(kind.isNotEmpty && kind == "video"){
+      return VideoItem(result);
+    }
+    return null;
+  }
+
+  ChannelItem _getChannelDetails(YT_API result){
+    var kind = result?.kind ?? "";
+    if(kind.isNotEmpty && kind == "channel"){
+      print("#### Channel KInd");
+      print(kind);
+      return ChannelItem(result);
+    }
+    return null;
+  }
+
+  ChannelItem getChannelItem(){
+    return _channelItem;
   }
 }
 

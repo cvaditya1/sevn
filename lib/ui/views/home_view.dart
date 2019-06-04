@@ -7,6 +7,7 @@ import 'base_view.dart';
 
 import 'package:sevn/core/viewmodels/home_model.dart';
 import 'package:sevn/core/models/video_item.dart';
+import 'package:sevn/core/models/channel_item.dart';
 import 'package:sevn/core/enums/view_state.dart';
 
 import 'video_list_item_view.dart';
@@ -27,11 +28,7 @@ class _HomeViewState extends State<HomeView> {
               appBar: AppBar(
                 title: Text(_title),
               ),
-              body: model.state == ViewState.BUSY
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Stack(
+              body: Stack(
                       children: <Widget>[
                         Container(
                           child: new Column(
@@ -39,6 +36,9 @@ class _HomeViewState extends State<HomeView> {
                               new Flexible(child: getVideoList(model)),
                             ],
                           ),
+                        ),
+                        Container(
+                          child: getCircularProgressWidget(model.state),
                         ),
                         Container(
                           child: ((_videoIdSelected?.isNotEmpty ?? false)
@@ -54,9 +54,18 @@ class _HomeViewState extends State<HomeView> {
 
   Widget getVideoList(HomeModel model) {
     List<VideoItem> items = model.videoItems;
+    ChannelItem channelItem = model.channelItem;
+    var itemCount = items?.length ?? 0;
+    if (itemCount == 0) {
+      return Center(
+        child: Text("No videos found"),
+      );
+    }
     ScrollController _scrollController = new ScrollController();
-    _scrollController.addListener((){
-      if(_scrollController.offset >= _scrollController.position.maxScrollExtent && !_scrollController.position.outOfRange){
+    _scrollController.addListener(() {
+      if (_scrollController.offset >=
+              _scrollController.position.maxScrollExtent &&
+          !_scrollController.position.outOfRange) {
         setState(() {
           //print("Reached Bottom");
           model.getNextPage();
@@ -72,12 +81,11 @@ class _HomeViewState extends State<HomeView> {
       padding: EdgeInsets.all(8.0),
       itemCount: items.length,
       itemBuilder: (context, index) {
-
         if (index == items.length - 1) {
-
           return null;
         } else {
           return VideoListItem(
+            channelItem: channelItem,
             videoItem: items[index],
             onTap: () {
               setState(() {
@@ -120,4 +128,10 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       );
+
+  Widget getCircularProgressWidget(ViewState state) {
+    return state == ViewState.BUSY ? Center(
+      child: CircularProgressIndicator(),
+    ) : null;
+  }
 }
